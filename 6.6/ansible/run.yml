@@ -112,5 +112,6 @@
     - name: stop local solr
       shell: >
         /opt/solr/bin/solr stop -p {{ flightdeck_solr.port | default('8983') }}
+      ignore_errors: yes
       environment:
         SOLR_PID_DIR: "/opt/solr/server/logs"
