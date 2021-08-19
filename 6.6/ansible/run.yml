@@ -77,14 +77,9 @@
       loop: "{{ flightdeck_solr.cores | default([]) }}"
     - name: Start local solr
       shell: >
-         /opt/solr/bin/solr start
+         /opt/solr/bin/solr start -m 512m -p {{ flightdeck_solr.port | default('8983') }} -h localhost
       environment:
-        SOLR_HEAP: "512m"
-        SOLR_HOME: "/opt/solr/server/solr"
-        SOLR_LOGS_DIR: "/opt/solr/server/logs"
-        SOLR_PID_DIR: "/opt/solr/server/logs"
-        SOLR_PORT: "{{ flightdeck_solr.port | default('8983') }}"
-        SOLR_OPTS: "-Xss256k -Djetty.host=localhost"
+        SOLR_PID_DIR: "/home/solr"
       notify:
         - stop local solr
     - name: Wait for solr to be ready
@@ -111,7 +106,7 @@
   handlers:
     - name: stop local solr
       shell: >
-        /opt/solr/bin/solr stop -p {{ flightdeck_solr.port | default('8983') }}
+        /opt/solr/bin/solr stop -all && pkill java
       ignore_errors: yes
       environment:
-        SOLR_PID_DIR: "/opt/solr/server/logs"
+        SOLR_PID_DIR: "/home/solr"
