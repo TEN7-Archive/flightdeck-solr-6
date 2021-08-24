@@ -29,4 +29,4 @@ ENV SOLR_PID_DIR /home/solr
 
 # Set the entrypoint and default command.
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["/opt/solr/bin/solr", "-f", "-m", "512m", "-p", "8983", "-h", "localhost"]
+CMD ["docker-cmd.sh", "/opt/solr/bin/solr", "-f", "-m", "512m", "-p", "8983", "-h", "localhost"]
