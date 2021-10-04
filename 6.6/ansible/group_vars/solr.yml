@@ -51,14 +51,12 @@ flightdeck_run_commands: |
 flightdeck_path:
   - '/opt/solr/bin'
 
-flightdeck_solr:
+flightdeck_solr_defaults:
   port: "8983"
+  memory: "512m"
   cores: []
-    # - name: "mysite_live"
-    #   type: "search_api_solr"
-    # - name: "othersite_live"
-    #   type: "apachesolr"
-    # - name: "blah"
-    #   type: "custom"
-    #   confDir: "/config/blah"
-    #   dataDir: "/data/blah"
+
+flightdeck_solr:
+  port: "{{ flightdeck_solr_defaults.port }}"
+  memory: "{{ flightdeck_solr_defaults.memory }}"
+  cores: "{{ flightdeck_solr_defaults.cores }}"
