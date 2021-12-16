@@ -7,6 +7,7 @@ echo "$SCRIPT_NAME: Starting solr in the foreground..."
 
 /opt/solr/bin/solr start -f \
   {% if (flightdeck_debug | default(false) == true) or (lookup('env', 'ANSIBLE_VERBOSITY') | default(false, true)) %}-v{% endif %} \
+  -Dlog4j2.formatMsgNoLookups=true
   -m {{ flightdeck_solr.memory | default(flightdeck_solr_defaults.memory) }} \
   -p {{ flightdeck_solr.port | default(flightdeck_solr_defaults.port) }} \
   -h localhost
