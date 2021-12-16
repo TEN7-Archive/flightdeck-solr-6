@@ -18,6 +18,21 @@ flightdeck_motd_links:
   - name: ' Learn more'
     url: 'https://flightdeck.ten7.com/'
 
+flightdeck_init_commands: |
+  if [ -n "${FLIGHTDECK_CONFIG}" ]; then
+    config_file=$(mktemp "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
+    echo "$FLIGHTDECK_CONFIG" | base64 -d > $config_file
+    ansible-playbook -i /ansible/inventories/all.ini -e "@${config_file}" /ansible/init.yml
+  elif [ -f "${FLIGHTDECK_CONFIG_FILE}" ]; then
+    ansible-playbook -i /ansible/inventories/all.ini -e "@${FLIGHTDECK_CONFIG_FILE}" /ansible/init.yml
+  elif [ -f "/config/solr/flightdeck-solr.yml" ]; then
+    ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flightdeck-solr.yml" /ansible/init.yml
+  elif [ -f "/config/solr/flight-deck-solr.yml" ]; then
+    ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flight-deck-solr.yml" /ansible/init.yml
+  else
+    ansible-playbook -i /ansible/inventories/all.ini /ansible/init.yml
+  fi
+
 flightdeck_run_commands: |
   if [ -n "${FLIGHTDECK_CONFIG}" ]; then
     config_file=$(mktemp "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
@@ -36,14 +51,12 @@ flightdeck_run_commands: |
 flightdeck_path:
   - '/opt/solr/bin'
 
-flightdeck_solr:
+flightdeck_solr_defaults:
   port: "8983"
+  memory: "512m"
   cores: []
-    # - name: "mysite_live"
-    #   type: "search_api_solr"
-    # - name: "othersite_live"
-    #   type: "apachesolr"
-    # - name: "blah"
-    #   type: "custom"
-    #   confDir: "/config/blah"
-    #   dataDir: "/data/blah"
+
+flightdeck_solr:
+  port: "{{ flightdeck_solr_defaults.port }}"
+  memory: "{{ flightdeck_solr_defaults.memory }}"
+  cores: "{{ flightdeck_solr_defaults.cores }}"

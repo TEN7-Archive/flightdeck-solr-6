@@ -68,6 +68,18 @@
         owner: "solr"
         group: "solr"
         mode: "u=rwx,g=rwx,o="
+    # Deploy the run command at build time using defaults in the template.
+    # This way, the container can still run via FLIGHTDECK_SKIP_ENTRYPOINT.
+    - name: Deploy key scripts.
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "solr"
+        group: "solr"
+        mode: "u=rwx,g=rwx,o="
+      loop:
+        - src: "templates/solr-foreground.sh.j2"
+          dest: "/opt/solr/bin/solr-foreground.sh"
   handlers:
     - name: delete temp items
       file:
