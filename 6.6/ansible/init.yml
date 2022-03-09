@@ -26,7 +26,7 @@
         label: "{{ item.name }}"
 
     - name: Sync confDir to /opt/solr/server/solr
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ item.confDir }}/"
         dest: "/opt/solr/server/solr/{{ item.name }}/conf"
         archive: yes

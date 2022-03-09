@@ -19,33 +19,37 @@ flightdeck_motd_links:
     url: 'https://flightdeck.ten7.com/'
 
 flightdeck_init_commands: |
-  if [ -n "${FLIGHTDECK_CONFIG}" ]; then
-    config_file=$(mktemp "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
-    echo "$FLIGHTDECK_CONFIG" | base64 -d > $config_file
-    ansible-playbook -i /ansible/inventories/all.ini -e "@${config_file}" /ansible/init.yml
-  elif [ -f "${FLIGHTDECK_CONFIG_FILE}" ]; then
-    ansible-playbook -i /ansible/inventories/all.ini -e "@${FLIGHTDECK_CONFIG_FILE}" /ansible/init.yml
-  elif [ -f "/config/solr/flightdeck-solr.yml" ]; then
-    ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flightdeck-solr.yml" /ansible/init.yml
-  elif [ -f "/config/solr/flight-deck-solr.yml" ]; then
-    ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flight-deck-solr.yml" /ansible/init.yml
-  else
-    ansible-playbook -i /ansible/inventories/all.ini /ansible/init.yml
+  if [ -f "/ansible/init.yml" ]; then
+    if [ -n "${FLIGHTDECK_CONFIG}" ]; then
+      config_file=$(mktemp "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
+      echo "$FLIGHTDECK_CONFIG" | base64 -d > $config_file
+      ansible-playbook -i /ansible/inventories/all.ini -e "@${config_file}" /ansible/init.yml
+    elif [ -f "${FLIGHTDECK_CONFIG_FILE}" ]; then
+      ansible-playbook -i /ansible/inventories/all.ini -e "@${FLIGHTDECK_CONFIG_FILE}" /ansible/init.yml
+    elif [ -f "/config/solr/flightdeck-solr.yml" ]; then
+      ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flightdeck-solr.yml" /ansible/init.yml
+    elif [ -f "/config/solr/flight-deck-solr.yml" ]; then
+      ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flight-deck-solr.yml" /ansible/init.yml
+    else
+      ansible-playbook -i /ansible/inventories/all.ini /ansible/init.yml
+    fi
   fi
 
 flightdeck_run_commands: |
-  if [ -n "${FLIGHTDECK_CONFIG}" ]; then
-    config_file=$(mktemp "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
-    echo "$FLIGHTDECK_CONFIG" | base64 -d > $config_file
-    ansible-playbook -i /ansible/inventories/all.ini -e "@${config_file}" /ansible/run.yml
-  elif [ -f "${FLIGHTDECK_CONFIG_FILE}" ]; then
-    ansible-playbook -i /ansible/inventories/all.ini -e "@${FLIGHTDECK_CONFIG_FILE}" /ansible/run.yml
-  elif [ -f "/config/solr/flightdeck-solr.yml" ]; then
-    ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flightdeck-solr.yml" /ansible/run.yml
-  elif [ -f "/config/solr/flight-deck-solr.yml" ]; then
-    ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flight-deck-solr.yml" /ansible/run.yml
-  else
-    ansible-playbook -i /ansible/inventories/all.ini /ansible/run.yml
+  if [ -f "/ansible/run.yml" ]; then
+    if [ -n "${FLIGHTDECK_CONFIG}" ]; then
+      config_file=$(mktemp "${TMPDIR:-/tmp/}$(basename $0).XXXXXXXXXXXX")
+      echo "$FLIGHTDECK_CONFIG" | base64 -d > $config_file
+      ansible-playbook -i /ansible/inventories/all.ini -e "@${config_file}" /ansible/run.yml
+    elif [ -f "${FLIGHTDECK_CONFIG_FILE}" ]; then
+      ansible-playbook -i /ansible/inventories/all.ini -e "@${FLIGHTDECK_CONFIG_FILE}" /ansible/run.yml
+    elif [ -f "/config/solr/flightdeck-solr.yml" ]; then
+      ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flightdeck-solr.yml" /ansible/run.yml
+    elif [ -f "/config/solr/flight-deck-solr.yml" ]; then
+      ansible-playbook -i /ansible/inventories/all.ini -e "@/config/solr/flight-deck-solr.yml" /ansible/run.yml
+    else
+      ansible-playbook -i /ansible/inventories/all.ini /ansible/run.yml
+    fi
   fi
 
 flightdeck_path:
